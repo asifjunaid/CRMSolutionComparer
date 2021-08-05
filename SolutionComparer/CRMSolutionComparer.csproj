@@ -237,7 +237,7 @@
   <PropertyGroup>
     <PostBuildEvent>IF $(ConfigurationName) == Debug (
       IF NOT EXIST Plugins mkdir Plugins
-      xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
+      xcopy "$(TargetDir)CRMSolutionComparer.All.dll" "$(TargetDir)Plugins\" /Y
       xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
       )</PostBuildEvent>
   </PropertyGroup>
