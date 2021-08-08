@@ -235,25 +235,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF $(ConfigurationName) == Debug (
-      IF NOT EXIST Plugins mkdir Plugins
-      xcopy "$(TargetDir)$(TargetName).All.dll" "$(TargetDir)Plugins\" /Y
-      xcopy "$(TargetDir)$(TargetName).All.pdb" "$(TargetDir)Plugins\" /Y
-      )</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
-  <!--<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\ILMerge.3.0.41\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.41\build\ILMerge.props'))" />
-  </Target>-->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.  
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
--->
   <UsingTask TaskName="MSBuild.ILMerge.Task" AssemblyFile="..\packages\MSBuild.ILMerge.Task.1.1.3\tools\MSBuild.ILMerge.Task.dll" />
   <Target Name="AfterBuild">
     <ItemGroup>
@@ -265,5 +249,7 @@
     </PropertyGroup>
     <Message Text="ILMerge  @(MergeAsm) -&gt; $(MergedAssembly)" Importance="high" />
     <Task InputAssemblies="@(MergeAsm)" OutputFile="$(TargetDir)$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" KeyFile="$(KeyOriginatorFile)" Internalize="false" DebugInfo="True" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).All.dll" DestinationFolder="$(TargetDir)/Plugins" ContinueOnError="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).All.pdb" DestinationFolder="$(TargetDir)/Plugins" ContinueOnError="true" />
   </Target>
 </Project>
