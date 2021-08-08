@@ -70,6 +70,7 @@ namespace CRMSolutionComparer
         public override void UpdateConnection(IOrganizationService newService, ConnectionDetail detail, string actionName, object parameter)
         {
             base.UpdateConnection(newService, detail, actionName, parameter);
+            if(ConnectionDetail.ServiceClient.OrganizationServiceProxy!=null)
             ConnectionDetail.ServiceClient.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
             sourceOrgName = detail.OrganizationFriendlyName;
             if (mySettings != null && detail != null)
@@ -81,7 +82,8 @@ namespace CRMSolutionComparer
 
         protected override void ConnectionDetailsUpdated(NotifyCollectionChangedEventArgs e)
         {
-            AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
+            if (AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy != null)
+                AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy.Timeout = new TimeSpan(1, 0, 0);
             targetOrgName =  AdditionalConnectionDetails.First().OrganizationFriendlyName;
             btnConnectToDest.Enabled = false;
             lblDestination.Visible = true;
@@ -95,7 +97,7 @@ namespace CRMSolutionComparer
                     sourceSolutionPicker.BeginInvoke((Action)(() => { sourceSolutionPicker.LoadSolutions(solution); }));
 
                     Console.WriteLine("Fetching target solutions!");
-                    solution = solManager.RetrieveSolutions(AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy);
+                    solution = solManager.RetrieveSolutions(AdditionalConnectionDetails.First().ServiceClient);
                     targetSolutionPicker.BeginInvoke((Action)(() => { targetSolutionPicker.LoadSolutions(solution); }));
                     Console.WriteLine("select source and target solution to compare!");
                 }
@@ -194,7 +196,7 @@ namespace CRMSolutionComparer
                         Console.WriteLine($"Exporting source default solution!");
                         solManager.ExportSolution(Service, solManager.SourceSolutionName, Guid.Parse("FD140AAF-4DF4-11DD-BD17-0019B9312238"));
                         Console.WriteLine($"Exporting target default solution!");
-                        solManager.ExportSolution(AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy,
+                        solManager.ExportSolution(AdditionalConnectionDetails.First().ServiceClient,
                             solManager.TargetSolutionName, Guid.Parse("FD140AAF-4DF4-11DD-BD17-0019B9312238"));
 
                     }
@@ -212,13 +214,15 @@ namespace CRMSolutionComparer
                         Console.WriteLine($"Exporting source solution {sourceSolution.GetAttributeValue<string>("uniquename")}!");
                         solManager.ExportSolution(Service, solManager.SourceSolutionName, sourceSolution.Id);
                         Console.WriteLine($"Exporting target solution {targetSolution.GetAttributeValue<string>("uniquename")}!");
-                        solManager.ExportSolution(AdditionalConnectionDetails.First().ServiceClient.OrganizationServiceProxy, solManager.TargetSolutionName, targetSolution.Id);
+                        solManager.ExportSolution(AdditionalConnectionDetails.First().ServiceClient, solManager.TargetSolutionName, targetSolution.Id);
 
-                        btnCompare.BeginInvoke((Action)(() =>
-                        {
-                            btnCompare.Enabled = true;
-                        }));
+                       
                     }
+
+                    btnCompare.BeginInvoke((Action)(() =>
+                    {
+                        btnCompare.Enabled = true;
+                    }));
 
                     NugetPackageManager nugetPackageManager = new NugetPackageManager();
                     nugetPackageManager.DownloadPackage();

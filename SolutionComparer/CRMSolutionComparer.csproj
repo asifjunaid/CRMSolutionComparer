@@ -237,8 +237,8 @@
   <PropertyGroup>
     <PostBuildEvent>IF $(ConfigurationName) == Debug (
       IF NOT EXIST Plugins mkdir Plugins
-      xcopy "$(TargetDir)CRMSolutionComparer.All.dll" "$(TargetDir)Plugins\" /Y
-      xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
+      xcopy "$(TargetDir)$(TargetName).All.dll" "$(TargetDir)Plugins\" /Y
+      xcopy "$(TargetDir)$(TargetName).All.pdb" "$(TargetDir)Plugins\" /Y
       )</PostBuildEvent>
   </PropertyGroup>
   <!--<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -261,9 +261,9 @@
       <MergeAsm Include="$(OutputPath)NuGet.Core.dll" />
     </ItemGroup>
     <PropertyGroup>
-      <MergedAssembly>$(OutputPath)CRMSolutionComparer.All.dll</MergedAssembly>
+      <MergedAssembly>$(TargetName).All.dll</MergedAssembly>
     </PropertyGroup>
     <Message Text="ILMerge  @(MergeAsm) -&gt; $(MergedAssembly)" Importance="high" />
-    <Task InputAssemblies="@(MergeAsm)" OutputFile="$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" KeyFile="$(KeyOriginatorFile)" Internalize="false" />
+    <Task InputAssemblies="@(MergeAsm)" OutputFile="$(TargetDir)$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" KeyFile="$(KeyOriginatorFile)" Internalize="false" DebugInfo="True" />
   </Target>
 </Project>
