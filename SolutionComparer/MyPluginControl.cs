@@ -28,9 +28,9 @@ namespace CRMSolutionComparer
         private string targetOrgName = string.Empty;
         private string compareToolFileLocation = string.Empty;
 
-        public string RepositoryName => "https://github.com/asifjunaid/SolutionComparer";
+        public string RepositoryName => "CRMSolutionComparer";
 
-        public string UserName => "asif.junaid@hotmail.com";
+        public string UserName => "asifjunaid";
 
         public MyPluginControl()
         {
@@ -87,7 +87,7 @@ namespace CRMSolutionComparer
             targetOrgName =  AdditionalConnectionDetails.First().OrganizationFriendlyName;
             btnConnectToDest.Enabled = false;
             lblDestination.Visible = true;
-            lblDestination.Text = $"Target Organization Connected To {AdditionalConnectionDetails.First().ConnectionName}";
+            lblDestination.Text = $"Target Organization Connected To {AdditionalConnectionDetails.First().ServerName} ({targetOrgName})";
             
             Task.Run((Action)(() => {
                 try
